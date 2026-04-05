@@ -273,6 +273,7 @@
     .testi-grid { grid-template-columns: 1fr; }
     .footer-grid { grid-template-columns: 1fr 1fr; gap: 32px; }
     nav { display: none; }
+    .hamburger { display: flex; }
   }
   @media (max-width: 600px) {
     .features-inner { grid-template-columns: 1fr 1fr; }
@@ -282,6 +283,141 @@
     .contact-strip-inner { flex-direction: column; text-align: center; }
     .topbar-inner { justify-content: center; }
   }
+
+  /* HAMBURGER */
+  .hamburger {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 42px; height: 42px;
+    background: none;
+    border: 2px solid #e8edf3;
+    border-radius: 6px;
+    cursor: pointer;
+    gap: 5px;
+    flex-shrink: 0;
+  }
+  .hamburger span {
+    display: block;
+    width: 20px; height: 2px;
+    background: var(--dark);
+    border-radius: 2px;
+    transition: transform 0.3s, opacity 0.3s;
+  }
+  .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .hamburger.open span:nth-child(2) { opacity: 0; }
+  .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+  /* MOBILE MENU OVERLAY */
+  .mob-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.45);
+    z-index: 1500;
+  }
+  .mob-overlay.open { display: block; }
+
+  /* MOBILE DRAWER */
+  .mob-drawer {
+    position: fixed;
+    top: 0; right: -320px;
+    width: 300px;
+    height: 100%;
+    background: var(--white);
+    z-index: 1600;
+    box-shadow: -4px 0 24px rgba(0,0,0,0.15);
+    transition: right 0.3s ease;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+  }
+  .mob-drawer.open { right: 0; }
+  .mob-drawer-head {
+    padding: 20px 20px 16px;
+    border-bottom: 1px solid #eef1f5;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .mob-drawer-logo {
+    display: flex; align-items: center; gap: 10px;
+  }
+  .mob-drawer-logo-icon {
+    width: 38px; height: 38px;
+    background: linear-gradient(160deg, #6bbfcf 0%, #4ABFBF 100%);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .mob-drawer-logo-icon svg { width: 20px; height: 20px; }
+  .mob-drawer-name {
+    font-family: var(--font-head);
+    font-weight: 800;
+    font-size: 14px;
+    color: var(--dark);
+  }
+  .mob-close {
+    background: none; border: none;
+    font-size: 24px; cursor: pointer;
+    color: var(--gray); line-height: 1;
+    padding: 4px 8px;
+  }
+  .mob-nav { padding: 12px 0; flex: 1; }
+  .mob-nav a {
+    display: block;
+    padding: 14px 24px;
+    font-family: var(--font-head);
+    font-weight: 700;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--dark);
+    text-decoration: none;
+    border-bottom: 1px solid #f0f3f7;
+    transition: color 0.2s, background 0.2s;
+  }
+  .mob-nav a:hover { color: var(--primary); background: var(--primary-light); }
+  .mob-nav-label {
+    padding: 14px 24px 8px;
+    font-family: var(--font-head);
+    font-weight: 800;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--gray);
+    border-bottom: 1px solid #f0f3f7;
+  }
+  .mob-nav-sub a {
+    padding: 11px 24px 11px 36px;
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: none;
+    letter-spacing: 0;
+    color: var(--gray);
+    border-bottom: 1px solid #f4f7fb;
+  }
+  .mob-nav-sub a:hover { color: var(--primary-dark); background: var(--primary-light); }
+  .mob-cta {
+    padding: 20px;
+    border-top: 1px solid #eef1f5;
+  }
+  .mob-cta a {
+    display: block;
+    background: var(--primary);
+    color: white;
+    font-family: var(--font-head);
+    font-weight: 700;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 15px;
+    border-radius: 4px;
+    text-align: center;
+    text-decoration: none;
+    transition: background 0.2s;
+  }
+  .mob-cta a:hover { background: var(--primary-dark); }
 </style>
 </head>
 <body>
@@ -341,8 +477,54 @@
       <a href="#contact">Contact</a>
       <a href="#" class="nav-cta" onclick="openModal(event)">Afspraak Maken</a>
     </nav>
+    <button class="hamburger" id="hamburger" aria-label="Menu openen" onclick="toggleMob()">
+      <span></span><span></span><span></span>
+    </button>
   </div>
 </header>
+
+<!-- MOBILE OVERLAY -->
+<div class="mob-overlay" id="mob-overlay" onclick="closeMob()"></div>
+
+<!-- MOBILE DRAWER -->
+<div class="mob-drawer" id="mob-drawer">
+  <div class="mob-drawer-head">
+    <div class="mob-drawer-logo">
+      <div class="mob-drawer-logo-icon">
+        <svg viewBox="0 0 40 40" fill="none">
+          <circle cx="20" cy="14" r="6.5" stroke="white" stroke-width="2.2" fill="none"/>
+          <path d="M7 36c0-7.2 5.8-13 13-13s13 5.8 13 13" stroke="white" stroke-width="2.2" stroke-linecap="round" fill="none"/>
+        </svg>
+      </div>
+      <span class="mob-drawer-name">Philippe Verhagen</span>
+    </div>
+    <button class="mob-close" onclick="closeMob()">×</button>
+  </div>
+  <div class="mob-nav">
+    <a href="#" onclick="closeMob()">Home</a>
+    <a href="#behandelingen" onclick="closeMob()">Behandelingen</a>
+    <div class="mob-nav-label">Specialisaties</div>
+    <div class="mob-nav-sub">
+      <a href="#klachten" onclick="closeMob()">Duizeligheid &amp; evenwichtsstoornissen</a>
+      <a href="#klachten" onclick="closeMob()">Hoofdpijn &amp; migraine</a>
+      <a href="#klachten" onclick="closeMob()">Nekpijn</a>
+      <a href="#klachten" onclick="closeMob()">Oorsuizen (tinnitus)</a>
+      <a href="#klachten" onclick="closeMob()">Whiplash</a>
+      <a href="#klachten" onclick="closeMob()">Gewrichtsklachten &amp; spierklachten</a>
+      <a href="#klachten" onclick="closeMob()">Schouderklachten</a>
+      <a href="#klachten" onclick="closeMob()">Rugpijn</a>
+      <a href="#klachten" onclick="closeMob()">Uitstralingspijnen</a>
+      <a href="#klachten" onclick="closeMob()">Constipatie</a>
+      <a href="#klachten" onclick="closeMob()">Spijsverteringsproblemen</a>
+      <a href="#klachten" onclick="closeMob()">Sportgerelateerde klachten</a>
+    </div>
+    <a href="#afspraak" onclick="closeMob()">Afspraak</a>
+    <a href="#contact" onclick="closeMob()">Contact</a>
+  </div>
+  <div class="mob-cta">
+    <a href="#" onclick="closeMob(); openModal(event);">📅 &nbsp;Afspraak Maken</a>
+  </div>
+</div>
 
 <!-- HERO SLIDER -->
 <section class="hero" id="home">
@@ -763,6 +945,23 @@
 </div>
 
 <script>
+  // Mobile menu
+  function toggleMob() {
+    const drawer = document.getElementById('mob-drawer');
+    const overlay = document.getElementById('mob-overlay');
+    const btn = document.getElementById('hamburger');
+    drawer.classList.toggle('open');
+    overlay.classList.toggle('open');
+    btn.classList.toggle('open');
+    document.body.style.overflow = drawer.classList.contains('open') ? 'hidden' : '';
+  }
+  function closeMob() {
+    document.getElementById('mob-drawer').classList.remove('open');
+    document.getElementById('mob-overlay').classList.remove('open');
+    document.getElementById('hamburger').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
   // Slider
   let current = 0;
   const slides = document.querySelectorAll('.slide');
