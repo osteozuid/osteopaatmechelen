@@ -399,6 +399,52 @@
     border-bottom: 1px solid #f4f7fb;
   }
   .mob-nav-sub a:hover { color: var(--primary-dark); background: var(--primary-light); }
+
+  /* ACCORDION */
+  .mob-accordion { border-bottom: 1px solid #f0f3f7; }
+  .mob-acc-btn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 24px;
+    background: none;
+    border: none;
+    font-family: var(--font-head);
+    font-weight: 700;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--dark);
+    cursor: pointer;
+    transition: color 0.2s, background 0.2s;
+  }
+  .mob-acc-btn:hover { color: var(--primary); background: var(--primary-light); }
+  .mob-acc-btn svg { transition: transform 0.25s; flex-shrink: 0; }
+  .mob-acc-btn.open { color: var(--primary); }
+  .mob-acc-btn.open svg { transform: rotate(180deg); }
+  .mob-acc-body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.35s ease;
+    background: #f8fafc;
+  }
+  .mob-acc-body.open { max-height: 600px; }
+  .mob-acc-body a {
+    display: block;
+    padding: 11px 24px 11px 32px;
+    font-family: var(--font-body);
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--gray);
+    text-decoration: none;
+    text-transform: none;
+    letter-spacing: 0;
+    border-bottom: 1px solid #eef1f5;
+    transition: color 0.15s, background 0.15s;
+  }
+  .mob-acc-body a::after { display: none !important; }
+  .mob-acc-body a:hover { color: var(--primary-dark); background: var(--primary-light); }
   .mob-cta {
     padding: 20px;
     border-top: 1px solid #eef1f5;
@@ -504,20 +550,25 @@
   <div class="mob-nav">
     <a href="#" onclick="closeMob()">Home</a>
     <a href="#behandelingen" onclick="closeMob()">Behandelingen</a>
-    <div class="mob-nav-label">Specialisaties</div>
-    <div class="mob-nav-sub">
-      <a href="#klachten" onclick="closeMob()">Duizeligheid &amp; evenwichtsstoornissen</a>
-      <a href="#klachten" onclick="closeMob()">Hoofdpijn &amp; migraine</a>
-      <a href="#klachten" onclick="closeMob()">Nekpijn</a>
-      <a href="#klachten" onclick="closeMob()">Oorsuizen (tinnitus)</a>
-      <a href="#klachten" onclick="closeMob()">Whiplash</a>
-      <a href="#klachten" onclick="closeMob()">Gewrichtsklachten &amp; spierklachten</a>
-      <a href="#klachten" onclick="closeMob()">Schouderklachten</a>
-      <a href="#klachten" onclick="closeMob()">Rugpijn</a>
-      <a href="#klachten" onclick="closeMob()">Uitstralingspijnen</a>
-      <a href="#klachten" onclick="closeMob()">Constipatie</a>
-      <a href="#klachten" onclick="closeMob()">Spijsverteringsproblemen</a>
-      <a href="#klachten" onclick="closeMob()">Sportgerelateerde klachten</a>
+    <div class="mob-accordion">
+      <button class="mob-acc-btn" onclick="toggleAcc(this)">
+        Specialisaties
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="14" height="14"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="mob-acc-body">
+        <a href="#klachten" onclick="closeMob()">Duizeligheid &amp; evenwichtsstoornissen</a>
+        <a href="#klachten" onclick="closeMob()">Hoofdpijn &amp; migraine</a>
+        <a href="#klachten" onclick="closeMob()">Nekpijn</a>
+        <a href="#klachten" onclick="closeMob()">Oorsuizen (tinnitus)</a>
+        <a href="#klachten" onclick="closeMob()">Whiplash</a>
+        <a href="#klachten" onclick="closeMob()">Gewrichtsklachten &amp; spierklachten</a>
+        <a href="#klachten" onclick="closeMob()">Schouderklachten</a>
+        <a href="#klachten" onclick="closeMob()">Rugpijn</a>
+        <a href="#klachten" onclick="closeMob()">Uitstralingspijnen</a>
+        <a href="#klachten" onclick="closeMob()">Constipatie</a>
+        <a href="#klachten" onclick="closeMob()">Spijsverteringsproblemen</a>
+        <a href="#klachten" onclick="closeMob()">Sportgerelateerde klachten</a>
+      </div>
     </div>
     <a href="#afspraak" onclick="closeMob()">Afspraak</a>
     <a href="#contact" onclick="closeMob()">Contact</a>
@@ -946,6 +997,12 @@
 </div>
 
 <script>
+  function toggleAcc(btn) {
+    const body = btn.nextElementSibling;
+    btn.classList.toggle('open');
+    body.classList.toggle('open');
+  }
+
   // Mobile menu
   function toggleMob() {
     const drawer = document.getElementById('mob-drawer');
